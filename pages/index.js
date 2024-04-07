@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { getData } from "./api/fetchData";
 import PointOfSale from "@/components/pos";
+import Image from "next/image";
+import Link from "next/link";
+import Logo from "../public/logo.png";
 
 export default function Home() {
   const [sheetData, setSheetData] = useState([]);
@@ -18,8 +21,10 @@ export default function Home() {
     fetchData();
   }, []);
   return (
-    <div>
-      <h1>Google Sheets Data</h1>
+    <div className="app">
+      <Link className="logo" href="/">
+        <Image width={100} alt="logo" src={Logo} />
+      </Link>
       <PointOfSale prods={sheetData} />
     </div>
   );

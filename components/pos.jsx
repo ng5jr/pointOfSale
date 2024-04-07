@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import DeleteIcon from "../public/delete.png";
+import Image from "next/image";
 
 function PointOfSale({ prods }) {
   const productos = prods;
@@ -8,6 +10,7 @@ function PointOfSale({ prods }) {
   const [moneda, setMoneda] = useState("USD");
   const [nuevaVenta, setNuevaVenta] = useState(false);
   const [submitStatus, setSubmitStatus] = useState("");
+  const [valueMXN, setValueMXN] = useState(15);
 
   const handleAddToCart = (producto) => {
     const item = {
@@ -67,146 +70,158 @@ function PointOfSale({ prods }) {
   }
 
   return (
-    <div className="App">
+    <div className="pos">
       <>
-        <button onClick={() => setNuevaVenta(!nuevaVenta)}>
-          {nuevaVenta ? "CANCELAR VENTA" : "NUEVA VENTA"}
-        </button>
+        <div className="venta">
+          <button
+            className="button"
+            onClick={() => {
+              if (nuevaVenta) {
+                setSubmitStatus("");
+                setVenta([]);
+                setTotal(0);
+              }
+
+              setNuevaVenta(!nuevaVenta);
+            }}
+          >
+            {nuevaVenta ? "CANCELAR VENTA" : "NUEVA VENTA"}
+          </button>
+        </div>
+
         {nuevaVenta && (
-          <div>
-            <h2>INGRESE ORDEN</h2>
-            <ul>
+          <div className="orden">
+            <h2 className="section-title">INGRESE ORDEN</h2>
+            <div className="cambio">
+              <h3>Cambio del día</h3>
+              <input
+                className="valueMXN"
+                type="text"
+                value={valueMXN}
+                onChange={(e) => {
+                  setValueMXN(e.target.value);
+                }}
+              />
+            </div>
+            <ul className="products-list">
               {productos.length !== 0 &&
                 productos.map((producto, index) => (
-                  <li key={index}>
-                    {producto["producto"]} - {producto["precio"]}
-                    <button onClick={() => handleAddToCart(producto)}>
-                      Add to Cart
+                  <li key={index} className="product-item">
+                    <span className="product-name">
+                      {producto["producto"]} - {producto["precio"]}
+                    </span>
+                    <button
+                      className="button"
+                      onClick={() => handleAddToCart(producto)}
+                    >
+                      Agregar
                     </button>
                   </li>
                 ))}
             </ul>
-            <h2>Cart</h2>
+            <h2 className="section-title">Cart</h2>
             <form className="form" onSubmit={(e) => Submit(e)}>
-              <label htmlFor="MetodoPago">Método de Pago:</label>
-              <select
-                value={metodoPago}
-                name="MetodoPago"
-                id="MetodoPago"
-                onChange={handleMetodoPagoChange}
-              >
-                <option value="Cash">Efectivo</option>
-                <option value="Tarjeta">Tarjeta</option>
-              </select>
-              <label htmlFor="Moneda">Método de Pago:</label>
-              <select
-                value={moneda}
-                name="Moneda"
-                id="Moneda"
-                onChange={handleMonedaChange}
-              >
-                <option value="USD">USD</option>
-                <option value="MXN">MXN</option>
-              </select>
+              <div className="cart-items">
+                {venta.map((item, index) => {
+                  const currentDate = new Date().toLocaleDateString();
+                  const currentTime = new Date().toLocaleTimeString();
 
-              {venta.map((item, index) => {
-                // Obtener la fecha actual
-                const currentDate = new Date().toLocaleDateString();
-                const currentTime = new Date().toLocaleTimeString();
+                  return (
+                    <div key={index} className="cart-item">
+                      <input
+                        type="hidden"
+                        name={`Producto_${index}`}
+                        value={item.producto}
+                      />
+                      <input
+                        type="hidden"
+                        name={`Cantidad_${index}`}
+                        value={item.cantidad}
+                      />
+                      <input
+                        type="hidden"
+                        name={`Fecha_${index}`}
+                        value={currentDate}
+                      />
+                      <input
+                        type="hidden"
+                        name={`Hora_${index}`}
+                        value={currentTime}
+                      />
+                      <input
+                        type="hidden"
+                        name={`Metodopago_${index}`}
+                        value={metodoPago}
+                      />
+                      <input
+                        type="hidden"
+                        name={`Moneda_${index}`}
+                        value={moneda}
+                      />
+                      <span>
+                        {item.producto} - {item.cantidad} x {item.precio} = $
+                        {item.subtotal.toFixed(2)}
+                      </span>
 
-                return (
-                  <div key={index}>
-                    <input
-                      type="hidden"
-                      name={`Producto_${index}`}
-                      value={item.producto}
-                    />
-                    <input
-                      type="hidden"
-                      name={`Cantidad_${index}`}
-                      value={item.cantidad}
-                    />
-                    {/* <input
-                      type="hidden"
-                      name={`Precio_${index}`}
-                      value={item.precio}
-                    />
-                   */}
-                    <input
-                      type="hidden"
-                      name={`Fecha_${index}`}
-                      value={currentDate}
-                    />
-                    <input
-                      type="hidden"
-                      name={`Hora_${index}`}
-                      value={currentTime}
-                    />
-                    <input
-                      type="hidden"
-                      name={`Metodopago_${index}`}
-                      value={metodoPago}
-                    />
-                    <input
-                      type="hidden"
-                      name={`Moneda_${index}`}
-                      value={moneda}
-                    />
-                    {item.producto} - {item.cantidad} x {item.precio} = $
-                    {item.subtotal.toFixed(2)}
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveFromCart(index)}
-                    >
-                      Remove
-                    </button>
-                  </div>
-                );
-              })}
-              {/* {venta.map((item, index) => (
-                <div key={index}>
-                  <input
-                    type="hidden"
-                    name="Producto"
-                    value={item["producto"]}
-                  />
-                  <input type="hidden" name="Cantidad" value={item.cantidad} />
-                  {item["producto"]} - {item.cantidad} x {item["precio"]} = $
-                  {item.subtotal.toFixed(2)}
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveFromCart(index)}
-                  >
-                    Remove
-                  </button>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveFromCart(index)}
+                        className="button delete"
+                      >
+                        <Image alt="deleteIcon" src={DeleteIcon} />
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="checkout">
+                <div className="totales">
+                  <span className="cart-total">
+                    Total: USD {total.toFixed(2)}
+                  </span>
+                  <span className="cart-total-MXN">
+                    Total: MXN {(total.toFixed(2) * valueMXN).toFixed(2)}
+                  </span>
                 </div>
-              ))} */}
-              <input className="submitButton" type="submit" value="submit" />
+                <div className="selectores">
+                  <div className="metodo">
+                    <label htmlFor="MetodoPago">Método de Pago:</label>
+                    <select
+                      value={metodoPago}
+                      name="MetodoPago"
+                      id="MetodoPago"
+                      onChange={handleMetodoPagoChange}
+                      className="select-input"
+                    >
+                      <option value="Cash">Efectivo</option>
+                      <option value="Tarjeta">Tarjeta</option>
+                    </select>
+                  </div>
+                  <div className="monedas">
+                    <label htmlFor="Moneda">Moneda:</label>
+                    <select
+                      value={moneda}
+                      name="Moneda"
+                      id="Moneda"
+                      onChange={handleMonedaChange}
+                      className="select-input"
+                    >
+                      <option value="USD">USD</option>
+                      <option value="MXN">MXN</option>
+                    </select>
+                  </div>
+                </div>
+                <input
+                  className="submitButton button"
+                  type="submit"
+                  value="Registrar Venta"
+                />
+              </div>
             </form>
-            <h2>Total: ${total.toFixed(2)}</h2>
           </div>
         )}
-        {submitStatus && <p>{submitStatus}</p>}
+        {submitStatus && <p className="submit-message">{submitStatus}</p>}
       </>
-
-      {/* <div>
-        <form className="form" onSubmit={(e) => Submit(e)}>
-          <input
-            placeholder="Your Name"
-            id="FirstName"
-            name="FirstName"
-            type="text"
-          />
-          <input
-            placeholder="Your Email"
-            id="LastName"
-            name="LastName"
-            type="text"
-          />
-
-          <input className="submitButton" type="submit" value="submit" />
-        </form>
-      </div> */}
     </div>
   );
 }
