@@ -42,7 +42,7 @@ function PointOfSale({ prods }) {
     const formEle = document.querySelector("form");
     const formDatab = new FormData(formEle);
     fetch(
-      "https://script.google.com/macros/s/AKfycbwUPI3A_RdEqr2MRO8v6twa-lYeRKqa2s39nuH8OofnYC9J0XEsqkwvym8ZTdC7Nev8/exec",
+      "https://script.google.com/macros/s/AKfycby4p8LxyrxwBuUIxA8gMJRjRMZVdsD3BV8OkBHJLXyvRtUpSVyZVVHIqzh0gXXSUi6b/exec",
       {
         method: "POST",
         body: formDatab,
@@ -132,6 +132,16 @@ function PointOfSale({ prods }) {
                         type="hidden"
                         name={`Producto_${index}`}
                         value={item.producto}
+                      />
+                      <input
+                        type="hidden"
+                        name={`Cambiousado_${index}`}
+                        value={valueMXN}
+                      />
+                      <input
+                        type="hidden"
+                        name={`Precio_${index}`}
+                        value={item.precio}
                       />
                       <input
                         type="hidden"
