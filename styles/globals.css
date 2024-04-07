@@ -275,3 +275,9 @@ select {
   border: none;
   background: gray;
 }
+
+.submit-message {
+  width: 100%;
+  text-align: center;
+  margin: 20px 0;
+}

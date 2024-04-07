@@ -53,10 +53,13 @@ function PointOfSale({ prods }) {
           // If submission is successful, set submitStatus to indicate success
           setSubmitStatus("VENTA REGISTRADA");
           setTimeout(() => {
-            setSubmitStatus("");
             setVenta([]);
             setTotal(0);
+            setNuevaVenta(false);
           }, 1000);
+          setTimeout(() => {
+            setSubmitStatus("");
+          }, 2000);
         } else {
           // If submission fails, set submitStatus to indicate failure
           setSubmitStatus("ERROR, INTENTE NUEVAMENTE");
@@ -228,8 +231,8 @@ function PointOfSale({ prods }) {
             </form>
           </div>
         )}
-        {submitStatus && <p className="submit-message">{submitStatus}</p>}
       </>
+      {submitStatus && <p className="submit-message">{submitStatus}</p>}
     </div>
   );
 }
