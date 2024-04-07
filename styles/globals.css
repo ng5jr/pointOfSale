@@ -96,6 +96,10 @@ body {
     rgb(var(--background-start-rgb));
 }
 
+h2 {
+  text-decoration: underline;
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -168,6 +172,7 @@ a {
   color: #fff;
   border: none;
   padding: 10px 10px;
+  min-width: 85px;
   cursor: pointer;
   text-transform: uppercase;
 }
@@ -208,6 +213,7 @@ a {
   justify-content: center;
   border-radius: 20px;
   width: 35px;
+  min-width: unset;
 }
 
 .delete img {
@@ -239,6 +245,8 @@ a {
 
   text-align: center;
   background: gray;
+  width: 87px;
+  padding: 5px 0px;
 }
 .checkout {
   display: flex;
@@ -248,12 +256,15 @@ a {
 }
 
 .totales {
-  margin: 20px 0;
+  margin: 10px 0 20px;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   gap: 50px;
+  font-size: 20px;
+  background: blue;
+  width: 100%;
 }
 
 .totales span {

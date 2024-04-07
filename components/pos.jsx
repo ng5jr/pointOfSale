@@ -122,7 +122,7 @@ function PointOfSale({ prods }) {
                   </li>
                 ))}
             </ul>
-            <h2 className="section-title">Cart</h2>
+            <h2 className="section-title">CARRITO</h2>
             <form className="form" onSubmit={(e) => Submit(e)}>
               <div className="cart-items">
                 {venta.map((item, index) => {
