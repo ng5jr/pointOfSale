@@ -126,7 +126,7 @@ function PointOfSale({ prods }) {
             <form className="form" onSubmit={(e) => Submit(e)}>
               <div className="cart-items">
                 {venta.map((item, index) => {
-                  const currentDate = new Date().toLocaleDateString();
+                  const currentDate = new Date().toLocaleDateString("es-MX");
                   const currentTime = new Date().toLocaleTimeString();
 
                   return (
