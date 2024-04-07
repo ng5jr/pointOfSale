@@ -177,10 +177,8 @@ function PointOfSale({ prods }) {
               <div className="checkout">
                 <div className="totales">
                   <span className="cart-total">
-                    Total: USD {total.toFixed(2)}
-                  </span>
-                  <span className="cart-total-MXN">
-                    Total: MXN {(total.toFixed(2) * valueMXN).toFixed(2)}
+                    Total: USD {total.toFixed(2)} / MXN{" "}
+                    {(total.toFixed(2) * valueMXN).toFixed(2)}
                   </span>
                 </div>
                 <div className="selectores">

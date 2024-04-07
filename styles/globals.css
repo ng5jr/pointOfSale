@@ -193,11 +193,13 @@ a {
 .section-title {
   width: 100%;
   text-align: center;
+  margin-bottom: 10px;
 }
 
 .pos {
   width: 360px;
   max-width: 600px;
+  margin: 20px 0;
 }
 
 .delete {
