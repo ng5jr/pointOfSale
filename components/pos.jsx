@@ -4,8 +4,10 @@ function PointOfSale({ prods }) {
   const productos = prods;
   const [venta, setVenta] = useState([]);
   const [total, setTotal] = useState(0);
-
+  const [metodoPago, setMetodoPago] = useState("Cash");
+  const [moneda, setMoneda] = useState("USD");
   const [nuevaVenta, setNuevaVenta] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState("");
 
   const handleAddToCart = (producto) => {
     const item = {
@@ -25,21 +27,42 @@ function PointOfSale({ prods }) {
     setTotal(total - itemToRemove.subtotal);
   };
 
+  const handleMetodoPagoChange = (event) => {
+    setMetodoPago(event.target.value); // Actualizar el estado metodoPago
+  };
+  const handleMonedaChange = (event) => {
+    setMoneda(event.target.value); // Actualizar el estado metodoPago
+  };
+
   function Submit(e) {
     e.preventDefault();
     const formEle = document.querySelector("form");
     const formDatab = new FormData(formEle);
     fetch(
-      "https://script.google.com/macros/s/AKfycby6VkMAQr6Kk2307A8Kmjz2hFHUTWvlcVQYFvgnhuBBXxkyQiRF4RPfs6ba7fzdHEjz/exec",
+      "https://script.google.com/macros/s/AKfycbwUPI3A_RdEqr2MRO8v6twa-lYeRKqa2s39nuH8OofnYC9J0XEsqkwvym8ZTdC7Nev8/exec",
       {
         method: "POST",
         body: formDatab,
       }
     )
-      .then((res) => console.log(res, formDatab))
-
+      .then((response) => {
+        if (response.ok) {
+          // If submission is successful, set submitStatus to indicate success
+          setSubmitStatus("VENTA REGISTRADA");
+          setTimeout(() => {
+            setSubmitStatus("");
+            setVenta([]);
+            setTotal(0);
+          }, 1000);
+        } else {
+          // If submission fails, set submitStatus to indicate failure
+          setSubmitStatus("ERROR, INTENTE NUEVAMENTE");
+        }
+      })
       .catch((error) => {
-        console.log(error);
+        // If an error occurs during submission, set submitStatus to indicate error
+        setSubmitStatus("An error occurred. Please try again later.");
+        console.error("Error submitting form:", error);
       });
   }
 
@@ -65,6 +88,27 @@ function PointOfSale({ prods }) {
             </ul>
             <h2>Cart</h2>
             <form className="form" onSubmit={(e) => Submit(e)}>
+              <label htmlFor="MetodoPago">Método de Pago:</label>
+              <select
+                value={metodoPago}
+                name="MetodoPago"
+                id="MetodoPago"
+                onChange={handleMetodoPagoChange}
+              >
+                <option value="Cash">Efectivo</option>
+                <option value="Tarjeta">Tarjeta</option>
+              </select>
+              <label htmlFor="Moneda">Método de Pago:</label>
+              <select
+                value={moneda}
+                name="Moneda"
+                id="Moneda"
+                onChange={handleMonedaChange}
+              >
+                <option value="USD">USD</option>
+                <option value="MXN">MXN</option>
+              </select>
+
               {venta.map((item, index) => {
                 // Obtener la fecha actual
                 const currentDate = new Date().toLocaleDateString();
@@ -87,11 +131,7 @@ function PointOfSale({ prods }) {
                       name={`Precio_${index}`}
                       value={item.precio}
                     />
-                    <input
-                      type="hidden"
-                      name={`Subtotal_${index}`}
-                      value={item.subtotal}
-                    /> */}
+                   */}
                     <input
                       type="hidden"
                       name={`Fecha_${index}`}
@@ -101,6 +141,16 @@ function PointOfSale({ prods }) {
                       type="hidden"
                       name={`Hora_${index}`}
                       value={currentTime}
+                    />
+                    <input
+                      type="hidden"
+                      name={`Metodopago_${index}`}
+                      value={metodoPago}
+                    />
+                    <input
+                      type="hidden"
+                      name={`Moneda_${index}`}
+                      value={moneda}
                     />
                     {item.producto} - {item.cantidad} x {item.precio} = $
                     {item.subtotal.toFixed(2)}
@@ -136,6 +186,7 @@ function PointOfSale({ prods }) {
             <h2>Total: ${total.toFixed(2)}</h2>
           </div>
         )}
+        {submitStatus && <p>{submitStatus}</p>}
       </>
 
       {/* <div>
